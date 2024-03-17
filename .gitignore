@@ -1,3 +1,7 @@
 /node_modules
 /coverage
 .env
+
+# temp notes file with a bunch of tokens and sensitive IDs
+
+notes.md
