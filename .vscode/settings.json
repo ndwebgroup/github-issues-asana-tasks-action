@@ -1,0 +1,26 @@
+{
+    "workbench.colorCustomizations": {
+        "activityBar.activeBackground": "#ed3623",
+        "activityBar.background": "#ed3623",
+        "activityBar.foreground": "#e7e7e7",
+        "activityBar.inactiveForeground": "#e7e7e799",
+        "activityBarBadge.background": "#07580f",
+        "activityBarBadge.foreground": "#e7e7e7",
+        "commandCenter.border": "#e7e7e799",
+        "sash.hoverBorder": "#ed3623",
+        "statusBar.background": "#cc2211",
+        "statusBar.foreground": "#e7e7e7",
+        "statusBarItem.hoverBackground": "#ed3623",
+        "statusBarItem.remoteBackground": "#cc2211",
+        "statusBarItem.remoteForeground": "#e7e7e7",
+        "titleBar.activeBackground": "#cc2211",
+        "titleBar.activeForeground": "#e7e7e7",
+        "titleBar.inactiveBackground": "#cc221199",
+        "titleBar.inactiveForeground": "#e7e7e799"
+    },
+    "peacock.color": "#cc2211",
+    "cSpell.words": [
+        "asana",
+        "micromark"
+    ]
+}

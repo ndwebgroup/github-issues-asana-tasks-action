@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Asana API Experiments",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

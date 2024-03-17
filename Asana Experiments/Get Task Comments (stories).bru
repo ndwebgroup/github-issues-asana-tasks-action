@@ -1,0 +1,19 @@
+meta {
+  name: Get Task Comments (stories)
+  type: http
+  seq: 2
+}
+
+get {
+  url: https://app.asana.com/api/1.0/tasks/{{task_id}}/stories
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{process.env.PAT}}
+}
+
+vars:pre-request {
+  task_id: 1206844077072202
+}

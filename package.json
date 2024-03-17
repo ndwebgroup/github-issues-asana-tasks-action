@@ -1,0 +1,33 @@
+{
+  "name": "github-issues-asana-action",
+  "version": "0.0.0",
+  "description": "A GitHub Action to create and udpate Asana Tasks from GitHub Issues.",
+  "keywords": [
+    "GitHub Issues",
+    "GitHub Actions",
+    "Asana"
+  ],
+  "license": "MIT",
+  "author": "Ideas On Purpose (https://www.ideasonpurpose.com/)",
+  "contributors": [
+    "Joe Maller <joe@ideasonpurpose.com>"
+  ],
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest",
+    "version": "version-everything && auto-changelog && git add -u"
+  },
+  "dependencies": {
+    "asana": "^3.0.2",
+    "dotenv": "^16.4.5",
+    "micromark": "^4.0.0",
+    "micromark-extension-gfm": "^3.0.0"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^1.4.0",
+    "auto-changelog": "^2.4.0",
+    "version-everything": "^0.11.0",
+    "vitest": "^1.4.0"
+  }
+}

@@ -1,0 +1,27 @@
+meta {
+  name: Create Task
+  type: http
+  seq: 4
+}
+
+post {
+  url: https://app.asana.com/api/1.0/tasks
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{process.env.PAT}}
+}
+
+body:json {
+  {
+    "data": {
+      "name": "from Bruno task #14",
+      "projects": [
+        "1206848227995333"
+      ],
+      "html_notes": "<body><em>replace this</em> with the <strong>GitHub Issue <a href='https://github.com/org/repo/issues/3'> Description</a></strong>\n\nTask created at 3/15/2024, 9:24:07 PM</body>"
+    }
+  }
+}

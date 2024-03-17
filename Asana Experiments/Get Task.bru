@@ -1,0 +1,15 @@
+meta {
+  name: Get Task
+  type: http
+  seq: 1
+}
+
+get {
+  url: https://app.asana.com/api/1.0/tasks/{{task_id}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{process.env.PAT}}
+}

@@ -1,0 +1,23 @@
+meta {
+  name: Post Comment to Task
+  type: http
+  seq: 3
+}
+
+post {
+  url: https://app.asana.com/api/1.0/tasks/{{task_id}}/stories
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{process.env.PAT}}
+}
+
+body:json {
+  {
+    "data": {
+      "html_text": "<body>This is a comment from <strong>the API</strong>.</body>"
+    }
+  }
+}
