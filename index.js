@@ -26,7 +26,7 @@ try {
    * project ID: 1206848227995333
    * search string: platypus
    */
-  const foundTask = findTaskContaining("platypus", "1206848227995333");
+  const foundTask = await findTaskContaining("platypus", "1206848227995333");
 
   console.log(`foundTask: ${JSON.stringify(foundTask, null, 2)}`);
 } catch (error) {
