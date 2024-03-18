@@ -2,12 +2,6 @@
 name: 'GitHub Issues To Asana Tasks'
 description: 'Link GitHub Issues to Asana Tasks'
 
-inputs:
-  ASANA_PAT:
-    description: 'An Asana Personal Access Token'
-    required: true
-    default: ''
-
 runs:
   using: 'node20'
   main: 'dist/index.js'
