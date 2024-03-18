@@ -1,6 +1,6 @@
 # GitHub Issues To Asana Tasks
 
-#### Version 0.0.3
+#### Version 0.0.4
 
 This integration creates Asana Tasks from GitHub issues. Once linked, Asana issues will be updated when Issues are updated or commented upon. The linked Asana Task will be completed when the GitHub issue is closed.
 

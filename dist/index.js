@@ -30724,7 +30724,7 @@ var __webpack_exports__ = {};
  */
 try {
   const payload = JSON.stringify(_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload, null, 2);
-  console.log(`The event payload: ${payload}`);
+  console.log(`The '${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.eventName}' event payload: ${payload}`);
 } catch (error) {
   _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(error.message);
 }
