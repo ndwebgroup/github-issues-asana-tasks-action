@@ -32,6 +32,7 @@
   "devDependencies": {
     "@vercel/ncc": "^0.38.1",
     "@vitest/coverage-v8": "^1.4.0",
+    "@types/asana": "^0.18.16",
     "auto-changelog": "^2.4.0",
     "version-everything": "^0.11.0",
     "vitest": "^1.4.0"
