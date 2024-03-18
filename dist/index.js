@@ -58402,7 +58402,7 @@ async function findTaskContaining(needle, projectId) {
       break;
     }
 
-    // console.log("getting more tasks");
+    console.log("getting more tasks");
 
     query = await query.nextPage();
     if (!query.data) {
@@ -58410,17 +58410,17 @@ async function findTaskContaining(needle, projectId) {
       break;
     }
     taskRequests++;
-    // console.log("got more:", query.data.length, "page:", taskRequests);
+    console.log("got more:", query.data.length, "page:", taskRequests);
     tasks = query.data;
   }
 
-  // console.log(
-  //   "Done!, Searched",
-  //   tasksSearched,
-  //   "tasks across",
-  //   taskRequests,
-  //   "requests."
-  // );
+  console.log(
+    "Done!, Searched",
+    tasksSearched,
+    "tasks across",
+    taskRequests,
+    "requests."
+  );
 
   //TODO: Handle errors
   return foundTask;
