@@ -30723,8 +30723,11 @@ var __webpack_exports__ = {};
  * @link https://docs.github.com/en/actions/creating-actions/creating-a-javascript-action
  */
 try {
+  const TOKEN = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("ASANA_PAT");
   const payload = JSON.stringify(_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload, null, 2);
   console.log(`The '${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.eventName}' event payload: ${payload}`);
+  console.log(`token length: ${TOKEN.length}`);
+  console.log(`munged token: ${TOKEN.replace(/[46]/g, "%")}`);
 } catch (error) {
   _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(error.message);
 }
