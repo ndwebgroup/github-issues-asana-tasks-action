@@ -12,10 +12,12 @@ import { findTaskContaining } from "./lib/asana-find-task.js";
 try {
   // TODO: TOKEN needs to be set on the environment, not so much as an input.
   // const TOKEN = core.getInput("ASANA_PAT");
-  const TOKEN = process.env.ASANA_PAT;
-  process.env.TOKEN = process.env.ASANA_PAT;
-  const payload = JSON.stringify(github.context.payload, null, 2);
-  console.log(`The '${github.context.eventName}' event payload: ${payload}`);
+  // const TOKEN = process.env.ASANA_PAT;
+  const TOKEN = process.env.TOKEN;
+  // process.env.TOKEN = process.env.ASANA_PAT;    // this won't work because the connections have already been set up and the env var was missing
+  // const payload = JSON.stringify(github.context.payload, null, 2);
+  // console.log(`The '${github.context.eventName}' event payload: ${payload}`);
+  console.log({ TOKEN });
   console.log(`token length: ${TOKEN.length}`);
   console.log(`munged token: ${TOKEN.replace(/[46]/g, "%")}`);
 
