@@ -9,7 +9,7 @@ import * as github from '@actions/github'
  */
 try {
   const payload = JSON.stringify(github.context.payload, null, 2);
-  console.log(`The event payload: ${payload}`);
+  console.log(`The '${github.context.eventName}' event payload: ${payload}`);
 } catch (error) {
   core.setFailed(error.message);
 }
