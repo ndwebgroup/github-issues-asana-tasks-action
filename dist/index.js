@@ -58485,9 +58485,11 @@ let tasksApiInstance = new asana__WEBPACK_IMPORTED_MODULE_0__/* .TasksApi */ .Uw
  */
 async function markTaskComplete(status, task_gid) {
   try {
+    const opts = { opt_fields: "permalink_url" };
     const result = await tasksApiInstance.updateTask(
       { data: { completed: !!status } },
-      task_gid
+      task_gid,
+      opts
     );
 
     console.log({ status, task_gid, result });

@@ -1,6 +1,6 @@
 # GitHub Issues To Asana Tasks
 
-#### Version 0.0.19
+#### Version 0.0.20
 
 This integration creates Asana Tasks from GitHub issues. Once linked, Asana issues will be updated when Issues are updated or commented upon. The linked Asana Task will be completed when the GitHub issue is closed.
 
@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
 
       - name: GitHub Issues To Asana Tasks
-        uses: ideasonpurpose/github-issues-asana-tasks-action@v0.0.19
+        uses: ideasonpurpose/github-issues-asana-tasks-action@v0.0.20
         env:
           ASANA_PAT: ${{ secrets.ASANA_PAT }}
 
