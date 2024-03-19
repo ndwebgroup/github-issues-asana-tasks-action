@@ -27,6 +27,10 @@ try {
 
 
 
+  // TODO: GET THE SEARCH STRING (html_url)
+
+  const issueSearchString = payload.issue?.html_url;
+
   // TODO: TOKEN needs to be set on the environment, not so much as an input.
   // const TOKEN = core.getInput("ASANA_PAT");
   // const TOKEN = process.env.ASANA_PAT;
@@ -40,6 +44,9 @@ try {
   // console.log(`token length: ${TOKEN.length}`);
   // console.log(`munged token: ${TOKEN.replace(/[46]/g, "%")}`);
 
+  if (!projectId || !issueSearchString) {
+    throw new Error('Unable to find Project ID or Task url')
+  }
   // NOTE: Actions must be validated to prevent running in the wrong context if the action is
   //       specified to run on all types or un-handled types.
   if (eventName === "issues") {
@@ -51,7 +58,7 @@ try {
     } else if (action === "closed" || action === "reopened") {
       // mark action completed = true, or incomplete = false)
 
-      const theTask = await findTaskContaining("platypus", projectId);
+      const theTask = await findTaskContaining(issueSearchString, projectId);
       const completed = !!(action === "closed");
       const result = await markTaskComplete(completed, theTask.gid);
       console.log({ eventName, action, result });
@@ -60,7 +67,7 @@ try {
     //
     //
     // TODO: GEt the search string and Project_gid first
-    const theTask = await findTaskContaining("platypus", projectId);
+    const theTask = await findTaskContaining(issueSearchString, projectId);
 
     await updateTask(github.context.payload, theTask.gid);
   }
