@@ -10,7 +10,6 @@ import { issueToTask } from "./lib/util/issue-to-task.js";
 import { createTask } from "./lib/asana-task-create.js";
 import { updateTask } from "./lib/asana-task-add-story.js";
 
-console.log('checking...')
 /**
  * Building from the docs here:
  * @link https://docs.github.com/en/actions/creating-actions/creating-a-javascript-action
