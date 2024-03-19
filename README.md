@@ -39,10 +39,12 @@ jobs:
       - name: GitHub Issues To Asana Tasks
         uses: ideasonpurpose/github-issues-asana-tasks-action@v0.0.14
         env:
-          ASANA_PAT: ${{ secrets.ASANA_TOKEN }}
+          ASANA_PAT: ${{ secrets.ASANA_PAT }}
 
 
 ```
+
+`ASANA_PAT` is a Personal Access Token with access to your projects. 
 
 ## How it works
 
