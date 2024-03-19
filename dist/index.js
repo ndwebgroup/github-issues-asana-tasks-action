@@ -58314,21 +58314,27 @@ __nccwpck_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
  * @link https://docs.github.com/en/actions/creating-actions/creating-a-javascript-action
  */
 try {
+  const { eventName, payload } = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context;
+  const { action } = payload;
   // TODO: TOKEN needs to be set on the environment, not so much as an input.
   // const TOKEN = core.getInput("ASANA_PAT");
   // const TOKEN = process.env.ASANA_PAT;
-  const TOKEN = process.env.TOKEN;
+  // const TOKEN = process.env.TOKEN;
   // process.env.TOKEN = process.env.ASANA_PAT;    // this won't work because the connections have already been set up and the env var was missing
-  const payload = JSON.stringify(_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload, null, 2);
-  console.log(`The '${_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.eventName}' event payload: ${payload}`);
-  console.log({ TOKEN });
-  console.log(`token length: ${TOKEN.length}`);
-  console.log(`munged token: ${TOKEN.replace(/[46]/g, "%")}`);
+  // const payload = JSON.stringify(github.context.payload, null, 2);
+  // const payload_str = JSON.stringify(payload, null, 2);
+  // console.log(
+  //   `The '${github.context.eventName}' event payload: ${payload_str}`
+  // );
+  // console.log({ TOKEN });
+  // console.log(`token length: ${TOKEN.length}`);
+  // console.log(`munged token: ${TOKEN.replace(/[46]/g, "%")}`);
 
-  if (
-    _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.eventName === "issue_comment" &&
-    _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.action === "created"
-  ) {
+  if (eventName === "issue") {
+    console.log(payload);
+  } else if (eventName === "issue_comment" && action === "created") {
+    //
+    //
     // TODO: GEt the search string and Project_gid first
     const theTask = await (0,_lib_asana_find_task_js__WEBPACK_IMPORTED_MODULE_2__/* .findTaskContaining */ .l)("platypus", "1206848227995333");
 
