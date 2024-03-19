@@ -1,6 +1,6 @@
 # GitHub Issues To Asana Tasks
 
-#### Version 0.0.11
+#### Version 0.0.5
 
 This integration creates Asana Tasks from GitHub issues. Once linked, Asana issues will be updated when Issues are updated or commented upon. The linked Asana Task will be completed when the GitHub issue is closed.
 
@@ -8,8 +8,8 @@ This integration creates Asana Tasks from GitHub issues. Once linked, Asana issu
 
 Tasks are a better mirror of Issues than Pull Requests. Issues are created because something needs doing, eg. _there is a task to be done._ Pull Requests are often created specifically to resolve an issue, eg. _to complete a task._
 
-|                       | Task           | Issue         | Pull Request          |
-| --------------------- | -------------- | ------------- | --------------------- |
+|                           | Task           | Issue         | Pull Request          |
+| ------------------------- | -------------- | ------------- | --------------------- |
 | **Feature/Bug Described** | Task Created   | Issue Created | -                     |
 | **Creative/Research**     | Task Updated   | Issue Updated | -                     |
 | **Work Started**          | Task Updated   | Issue Updated | Pull Request Created  |
@@ -17,7 +17,32 @@ Tasks are a better mirror of Issues than Pull Requests. Issues are created becau
 
 ### Other wins
 
-Because development happens on GitHub, having Issues attached to the code greatly reduces developer friction and prevents flow-breaking context shifts. Issues are attached to the code, and can be updated and resolved as part of the normal Git workflow. Issue creation is significantly more robust and faster using GitHub on Mobile, so QA can happen anywhere on a single device -- activating Mobile-friendly in-between spaces like subway commutes and other downtime. 
+Because development happens on GitHub, having Issues attached to the code greatly reduces developer friction and prevents flow-breaking context shifts. Issues are attached to the code, and can be updated and resolved as part of the normal Git workflow. Issue creation is significantly more robust and faster using GitHub on Mobile, so QA can happen anywhere on a single device -- activating Mobile-friendly in-between spaces like subway commutes and other downtime.
+
+## Example Action
+
+To use this action, add a workflow like this to your repo:
+
+```yaml
+name: GitHub Issues to Asana Tasks
+
+on:
+  issues:
+    types: [opened, closed, reopened, edited]
+  issue_comment:
+    types: [created]
+
+jobs:
+  issues-to-tasks:
+    runs-on: ubuntu-latest
+
+      - name: GitHub Issues To Asana Tasks
+        uses: ideasonpurpose/github-issues-asana-tasks-action@v0.0.6
+        env:
+          ASANA_PAT: ${{ secrets.ASANA_TOKEN }}
+
+
+```
 
 ## How it works
 
@@ -35,4 +60,3 @@ After adding the GitHub Action to a repository, two things are required for the 
 ### About Personal Access Tokens
 
 API operations authenticated with Personal Access Tokens will assume the identity of the user who created the token. We recommend creating a bot account in your Asana workspace. Log in as the bot user and follow [Asana's documentation for creating a Personal Access Token](https://developers.asana.com/docs/personal-access-token).
-
