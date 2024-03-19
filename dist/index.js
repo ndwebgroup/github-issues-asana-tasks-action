@@ -58485,7 +58485,10 @@ let tasksApiInstance = new asana__WEBPACK_IMPORTED_MODULE_0__/* .TasksApi */ .Uw
  */
 async function markTaskComplete(status, task_gid) {
   try {
-    const result = await tasksApiInstance.updateTask(!!status, task_gid);
+    const result = await tasksApiInstance.updateTask(
+      { data: { completed: !!status } },
+      task_gid
+    );
 
     console.log({ status, task_gid, result });
 
