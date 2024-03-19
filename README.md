@@ -28,7 +28,7 @@ name: GitHub Issues to Asana Tasks
 
 on:
   issues:
-    types: [opened, closed, reopened, edited]
+    types: [opened, closed, reopened]
   issue_comment:
     types: [created]
 
@@ -44,20 +44,18 @@ jobs:
 
 ```
 
-`ASANA_PAT` is a Personal Access Token with access to your projects. 
-
 ## How it works
 
-After adding the GitHub Action to a repository, two things are required for the action to do anything. The repository or organization must have an [Asana Personal Access Token](https://developers.asana.com/docs/personal-access-token) stored as a **GitHub Secret**, and the issue must include an [Asana Project Link](https://help.asana.com/hc/en-us/articles/14069807653147-Understanding-projects) in its Issue description.
+After adding the GitHub Action to a repository, two things are required for the action to do anything. The repository or organization must have an [Asana Personal Access Token](https://developers.asana.com/docs/personal-access-token) stored as a **GitHub Secret** named **`ASANA_PAT`**, and the issue must include an [Asana Project Link](https://help.asana.com/hc/en-us/articles/14069807653147-Understanding-projects) in its Issue description.
 
 - **On Issue Creation**<br>
-  For newly created Issues, the Action will attempt to create a new Task in Asana, in the project linked in the description. New Tasks will appear in the first group (column/list) but can be moved anywhere in the project. The Issue description will be used to populate the task note, along with a link back to the Issue. (this link will be used later for updates and completions)
+  For newly created Issues, the Action will attempt to create a new Task in Asana, in the project linked in the description. New Tasks will appear at the top of the first group (column/list) but can be moved anywhere in the project. The GitHub Issue's description will be used to populate the task note, along with a link back to the Issue.
 
 - **On Issue Updates (comments)**<br>
   For existing issues containing an Asana Project link, the Action will search the Project for a Task whose note contains the GitHub Issue permalink. If found, that Task will be updated with the new Issue comment.
 
-- **On Issue Closed**<br>
-  For existing issues containing an Asana Project link, the Action will search the Project for a Task whose note contains the GitHub Issue permalink. If found, that Task will be marked as completed.
+- **On Issue Closed/Re-opened**<br>
+  For existing issues containing an Asana Project link, the Action will search the Project for a Task whose note contains the GitHub Issue permalink. If found, that Task's `completed` status will be updated. 
 
 ### About Personal Access Tokens
 
