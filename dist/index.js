@@ -58333,8 +58333,6 @@ try {
   // const projectId = "1206848227995333";
   const projectId = (0,_lib_util_project_id_from_url_js__WEBPACK_IMPORTED_MODULE_6__/* .getProjectId */ .f)(payload.issue?.body);
 
-
-
   // TODO: GET THE SEARCH STRING (html_url)
 
   const issueSearchString = payload.issue?.html_url;
@@ -58345,7 +58343,7 @@ try {
   // const TOKEN = process.env.TOKEN;
   // process.env.TOKEN = process.env.ASANA_PAT;    // this won't work because the connections have already been set up and the env var was missing
   // const payload = JSON.stringify(github.context.payload, null, 2);
-  console.log({projectId, eventName, action});
+  console.log({ projectId, eventName, action });
   // const payload_str = JSON.stringify(payload, null, 2);
   // console.log(`The '${eventName}' event payload: ${payload_str}`);
   // console.log({ TOKEN });
@@ -58353,40 +58351,35 @@ try {
   // console.log(`munged token: ${TOKEN.replace(/[46]/g, "%")}`);
 
   if (!projectId || !issueSearchString) {
-    throw new Error('Unable to find Project ID or Task url')
+    throw new Error("Unable to find Project ID or Task url");
   }
   // NOTE: Actions must be validated to prevent running in the wrong context if the action is
   //       specified to run on all types or un-handled types.
+
+  let result;
+
   if (eventName === "issues") {
     if (action === "opened") {
       const taskContent = (0,_lib_util_issue_to_task_js__WEBPACK_IMPORTED_MODULE_7__/* .issueToTask */ .U)(payload);
-      const newTask = await (0,_lib_asana_task_create_js__WEBPACK_IMPORTED_MODULE_4__/* .createTask */ .v)(taskContent, projectId);
-
-      console.log(newTask);
+      result = await (0,_lib_asana_task_create_js__WEBPACK_IMPORTED_MODULE_4__/* .createTask */ .v)(taskContent, projectId);
     } else if (action === "closed" || action === "reopened") {
       // mark action completed = true, or incomplete = false)
 
       const theTask = await (0,_lib_asana_task_find_js__WEBPACK_IMPORTED_MODULE_2__/* .findTaskContaining */ .l)(issueSearchString, projectId);
       const completed = !!(action === "closed");
-      const result = await (0,_lib_asana_task_completed_js__WEBPACK_IMPORTED_MODULE_3__/* .markTaskComplete */ .T)(completed, theTask.gid);
-      console.log({ eventName, action, result });
+      result = await (0,_lib_asana_task_completed_js__WEBPACK_IMPORTED_MODULE_3__/* .markTaskComplete */ .T)(completed, theTask.gid);
     }
   } else if (eventName === "issue_comment" && action === "created") {
-    //
-    //
-    // TODO: GEt the search string and Project_gid first
     const theTask = await (0,_lib_asana_task_find_js__WEBPACK_IMPORTED_MODULE_2__/* .findTaskContaining */ .l)(issueSearchString, projectId);
 
-    await (0,_lib_asana_task_add_story_js__WEBPACK_IMPORTED_MODULE_5__/* .updateTask */ .x)(_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload, theTask.gid);
+    result = await (0,_lib_asana_task_add_story_js__WEBPACK_IMPORTED_MODULE_5__/* .updateTask */ .x)(_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload, theTask.gid);
   }
-  /**
-   * Temporary wiring
-   * project ID: 1206848227995333
-   * search string: platypus
-   */
-  // const foundTask = await findTaskContaining("platypus", "1206848227995333");
 
-  // console.log(`foundTask: ${JSON.stringify(foundTask, null, 2)}`);
+  console.log({ eventName, action, result });
+
+  if (result.errors) {
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(JSON.stringify(result, null, 2));
+  }
 } catch (error) {
   _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(error.message);
 }
