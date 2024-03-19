@@ -58345,9 +58345,9 @@ try {
   // const TOKEN = process.env.TOKEN;
   // process.env.TOKEN = process.env.ASANA_PAT;    // this won't work because the connections have already been set up and the env var was missing
   // const payload = JSON.stringify(github.context.payload, null, 2);
-  const payload_str = JSON.stringify(payload, null, 2);
-  console.log({projectId});
-  console.log(`The '${eventName}' event payload: ${payload_str}`);
+  console.log({projectId, eventName, action});
+  // const payload_str = JSON.stringify(payload, null, 2);
+  // console.log(`The '${eventName}' event payload: ${payload_str}`);
   // console.log({ TOKEN });
   // console.log(`token length: ${TOKEN.length}`);
   // console.log(`munged token: ${TOKEN.replace(/[46]/g, "%")}`);
@@ -74599,10 +74599,10 @@ function renderMarkdown(rawMd) {
     .replace(/<(\/?)h[456]>\s*/g, "<$1h2>")
     .trim();
 
-  // console.log({
-  //   rendered: JSON.stringify(rendered),
-  //   cleaned: JSON.stringify(cleaned),
-  // });
+  console.log({
+    rendered: JSON.stringify(rendered),
+    cleaned: JSON.stringify(cleaned),
+  });
 
   return `<body>${cleaned}</body>`;
 }
