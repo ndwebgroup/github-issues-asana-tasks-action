@@ -58302,10 +58302,12 @@ __nccwpck_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 /* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(5438);
 /* harmony import */ var _lib_asana_task_find_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(7902);
 /* harmony import */ var _lib_asana_task_completed_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(2798);
-/* harmony import */ var _lib_util_issue_to_task_js__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(3478);
 /* harmony import */ var _lib_asana_task_create_js__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(5688);
 /* harmony import */ var _lib_asana_task_add_story_js__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(44);
+/* harmony import */ var _lib_util_issue_to_task_js__WEBPACK_IMPORTED_MODULE_7__ = __nccwpck_require__(3478);
+/* harmony import */ var _lib_util_project_id_from_url_js__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(7829);
 // @ts-check
+
 
 
 
@@ -58328,7 +58330,10 @@ try {
   //
   // TODO: GET THE PROJECT_ID
   //
-  const projectId = "1206848227995333";
+  // const projectId = "1206848227995333";
+  const projectId = (0,_lib_util_project_id_from_url_js__WEBPACK_IMPORTED_MODULE_6__/* .getProjectId */ .f)(payload.issue?.body);
+
+
 
   // TODO: TOKEN needs to be set on the environment, not so much as an input.
   // const TOKEN = core.getInput("ASANA_PAT");
@@ -58337,6 +58342,7 @@ try {
   // process.env.TOKEN = process.env.ASANA_PAT;    // this won't work because the connections have already been set up and the env var was missing
   // const payload = JSON.stringify(github.context.payload, null, 2);
   const payload_str = JSON.stringify(payload, null, 2);
+  console.log({projectId});
   console.log(`The '${eventName}' event payload: ${payload_str}`);
   // console.log({ TOKEN });
   // console.log(`token length: ${TOKEN.length}`);
@@ -58346,7 +58352,7 @@ try {
   //       specified to run on all types or un-handled types.
   if (eventName === "issues") {
     if (action === "opened") {
-      const taskContent = (0,_lib_util_issue_to_task_js__WEBPACK_IMPORTED_MODULE_6__/* .issueToTask */ .U)(payload);
+      const taskContent = (0,_lib_util_issue_to_task_js__WEBPACK_IMPORTED_MODULE_7__/* .issueToTask */ .U)(payload);
       const newTask = await (0,_lib_asana_task_create_js__WEBPACK_IMPORTED_MODULE_4__/* .createTask */ .v)(taskContent, projectId);
 
       console.log(newTask);
@@ -74592,6 +74598,33 @@ function renderMarkdown(rawMd) {
   // });
 
   return `<body>${cleaned}</body>`;
+}
+
+
+/***/ }),
+
+/***/ 7829:
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
+
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "f": () => (/* binding */ getProjectId)
+/* harmony export */ });
+// @ts-check
+
+/**
+ * Extracts Project GIDs from Asana Project Links (permalink_url)
+ *
+ * @link https://developers.asana.com/reference/projects
+ * @example getProjectId("https://app.asana.com/0/12345678900/12345678900")
+ * @param {string | URL } projectLink from Asana's "Copy Project Link"
+ * @returns {string | false} Returns the project Id as a numeric string.
+ */
+function getProjectId(projectLink = "") {
+  const projectPattern = new RegExp("https://app.asana.com/0/(\\d+)/\\1");
+  projectLink = projectLink.toString();
+
+  const match = projectLink.match(projectPattern);
+  return match ? match[1] : false;
 }
 
 
