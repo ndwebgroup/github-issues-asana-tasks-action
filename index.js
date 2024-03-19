@@ -28,7 +28,7 @@ try {
     // TODO: GEt the search string and Project_gid first
     const theTask = await findTaskContaining("platypus", "1206848227995333");
 
-    await updateTask(github.context.payload, theTask).gid;
+    await updateTask(github.context.payload, theTask.gid);
   }
   /**
    * Temporary wiring
