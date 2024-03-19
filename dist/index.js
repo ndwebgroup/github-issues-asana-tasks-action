@@ -58335,6 +58335,10 @@ try {
 
 
 
+  // TODO: GET THE SEARCH STRING (html_url)
+
+  const issueSearchString = payload.issue?.html_url;
+
   // TODO: TOKEN needs to be set on the environment, not so much as an input.
   // const TOKEN = core.getInput("ASANA_PAT");
   // const TOKEN = process.env.ASANA_PAT;
@@ -58348,6 +58352,9 @@ try {
   // console.log(`token length: ${TOKEN.length}`);
   // console.log(`munged token: ${TOKEN.replace(/[46]/g, "%")}`);
 
+  if (!projectId || !issueSearchString) {
+    throw new Error('Unable to find Project ID or Task url')
+  }
   // NOTE: Actions must be validated to prevent running in the wrong context if the action is
   //       specified to run on all types or un-handled types.
   if (eventName === "issues") {
@@ -58359,7 +58366,7 @@ try {
     } else if (action === "closed" || action === "reopened") {
       // mark action completed = true, or incomplete = false)
 
-      const theTask = await (0,_lib_asana_task_find_js__WEBPACK_IMPORTED_MODULE_2__/* .findTaskContaining */ .l)("platypus", projectId);
+      const theTask = await (0,_lib_asana_task_find_js__WEBPACK_IMPORTED_MODULE_2__/* .findTaskContaining */ .l)(issueSearchString, projectId);
       const completed = !!(action === "closed");
       const result = await (0,_lib_asana_task_completed_js__WEBPACK_IMPORTED_MODULE_3__/* .markTaskComplete */ .T)(completed, theTask.gid);
       console.log({ eventName, action, result });
@@ -58368,7 +58375,7 @@ try {
     //
     //
     // TODO: GEt the search string and Project_gid first
-    const theTask = await (0,_lib_asana_task_find_js__WEBPACK_IMPORTED_MODULE_2__/* .findTaskContaining */ .l)("platypus", projectId);
+    const theTask = await (0,_lib_asana_task_find_js__WEBPACK_IMPORTED_MODULE_2__/* .findTaskContaining */ .l)(issueSearchString, projectId);
 
     await (0,_lib_asana_task_add_story_js__WEBPACK_IMPORTED_MODULE_5__/* .updateTask */ .x)(_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload, theTask.gid);
   }

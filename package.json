@@ -1,6 +1,6 @@
 {
   "name": "github-issues-asana-action",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "A GitHub Action to create and update Asana Tasks from GitHub Issues.",
   "keywords": [
     "GitHub Issues",
