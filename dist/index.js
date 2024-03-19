@@ -58332,7 +58332,7 @@ try {
     // TODO: GEt the search string and Project_gid first
     const theTask = await (0,_lib_asana_find_task_js__WEBPACK_IMPORTED_MODULE_2__/* .findTaskContaining */ .l)("platypus", "1206848227995333");
 
-    await (0,_lib_asana_update_task_js__WEBPACK_IMPORTED_MODULE_3__/* .updateTask */ .x)(_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload, theTask).gid;
+    await (0,_lib_asana_update_task_js__WEBPACK_IMPORTED_MODULE_3__/* .updateTask */ .x)(_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload, theTask.gid);
   }
   /**
    * Temporary wiring
@@ -74415,7 +74415,7 @@ async function updateTask(comment, task_gid) {
   //TODO: Handle errors
   const result = await storiesApiInstance.createStoryForTask(story, task_gid);
 
-  console.log({ result });
+  console.log({ story, task_gid, result });
   // return result.data.permalink_url;
   return result;
 }
