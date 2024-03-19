@@ -58317,7 +58317,6 @@ __nccwpck_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 
 
 
-console.log('checking...')
 /**
  * Building from the docs here:
  * @link https://docs.github.com/en/actions/creating-actions/creating-a-javascript-action
@@ -58492,9 +58491,9 @@ async function markTaskComplete(status, task_gid) {
 
     return result;
   } catch (error) {
-    console.log("error in markTaskComplete");
-    console.error(error.response?.status, error.response.body);
-    return error.response.body;
+    console.log("error in markTaskComplete", error);
+    console.error(error.response?.status, error.response?.body);
+    return error.response?.body;
   }
 }
 
