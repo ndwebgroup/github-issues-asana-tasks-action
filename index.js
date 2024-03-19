@@ -5,10 +5,11 @@ import * as github from "@actions/github";
 
 import { findTaskContaining } from "./lib/asana-task-find.js";
 import { markTaskComplete } from "./lib/asana-task-completed.js";
-
-import { issueToTask } from "./lib/util/issue-to-task.js";
 import { createTask } from "./lib/asana-task-create.js";
 import { updateTask } from "./lib/asana-task-add-story.js";
+
+import { issueToTask } from "./lib/util/issue-to-task.js";
+import { getProjectId } from "./lib/util/project-id-from-url.js";
 
 /**
  * Building from the docs here:
@@ -21,7 +22,10 @@ try {
   //
   // TODO: GET THE PROJECT_ID
   //
-  const projectId = "1206848227995333";
+  // const projectId = "1206848227995333";
+  const projectId = getProjectId(payload.issue?.body);
+
+
 
   // TODO: TOKEN needs to be set on the environment, not so much as an input.
   // const TOKEN = core.getInput("ASANA_PAT");
@@ -30,6 +34,7 @@ try {
   // process.env.TOKEN = process.env.ASANA_PAT;    // this won't work because the connections have already been set up and the env var was missing
   // const payload = JSON.stringify(github.context.payload, null, 2);
   const payload_str = JSON.stringify(payload, null, 2);
+  console.log({projectId});
   console.log(`The '${eventName}' event payload: ${payload_str}`);
   // console.log({ TOKEN });
   // console.log(`token length: ${TOKEN.length}`);

@@ -34,3 +34,12 @@ test("handles URL objects correctly", () => {
   const actual = getProjectId(projectLinkURL);
   expect(actual).toBe(projectId.toString());
 });
+
+test("works on large blobs too?", () => {
+  const projectId = 1200000987654321;
+  const projectLink = `https://app.asana.com/0/${projectId}/${projectId}`;
+  const blob = `loremConsectetur ut commodo ad voluptate ${projectLink} dolore do incididunt fugiat ex cupidatat ipsum aliquip nulla sit. Ut in ea est nisi reprehenderit sint. Amet deserunt do consectetur duis magna sit. Occaecat est tempor aliquip nulla et laboris. Ut excepteur non eiusmod aliqua deserunt amet elit esse. Velit quis labore non ullamco occaecat nulla ea sit. Ad occaecat nisi officia velit veniam anim.`;
+
+  const actual = getProjectId(blob);
+  expect(actual).toBe(projectId.toString());
+});
