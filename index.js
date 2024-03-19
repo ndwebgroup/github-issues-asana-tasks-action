@@ -25,8 +25,6 @@ try {
   // const projectId = "1206848227995333";
   const projectId = getProjectId(payload.issue?.body);
 
-
-
   // TODO: GET THE SEARCH STRING (html_url)
 
   const issueSearchString = payload.issue?.html_url;
@@ -37,7 +35,7 @@ try {
   // const TOKEN = process.env.TOKEN;
   // process.env.TOKEN = process.env.ASANA_PAT;    // this won't work because the connections have already been set up and the env var was missing
   // const payload = JSON.stringify(github.context.payload, null, 2);
-  console.log({projectId, eventName, action});
+  console.log({ projectId, eventName, action });
   // const payload_str = JSON.stringify(payload, null, 2);
   // console.log(`The '${eventName}' event payload: ${payload_str}`);
   // console.log({ TOKEN });
@@ -45,40 +43,35 @@ try {
   // console.log(`munged token: ${TOKEN.replace(/[46]/g, "%")}`);
 
   if (!projectId || !issueSearchString) {
-    throw new Error('Unable to find Project ID or Task url')
+    throw new Error("Unable to find Project ID or Task url");
   }
   // NOTE: Actions must be validated to prevent running in the wrong context if the action is
   //       specified to run on all types or un-handled types.
+
+  let result;
+
   if (eventName === "issues") {
     if (action === "opened") {
       const taskContent = issueToTask(payload);
-      const newTask = await createTask(taskContent, projectId);
-
-      console.log(newTask);
+      result = await createTask(taskContent, projectId);
     } else if (action === "closed" || action === "reopened") {
       // mark action completed = true, or incomplete = false)
 
       const theTask = await findTaskContaining(issueSearchString, projectId);
       const completed = !!(action === "closed");
-      const result = await markTaskComplete(completed, theTask.gid);
-      console.log({ eventName, action, result });
+      result = await markTaskComplete(completed, theTask.gid);
     }
   } else if (eventName === "issue_comment" && action === "created") {
-    //
-    //
-    // TODO: GEt the search string and Project_gid first
     const theTask = await findTaskContaining(issueSearchString, projectId);
 
-    await updateTask(github.context.payload, theTask.gid);
+    result = await updateTask(github.context.payload, theTask.gid);
   }
-  /**
-   * Temporary wiring
-   * project ID: 1206848227995333
-   * search string: platypus
-   */
-  // const foundTask = await findTaskContaining("platypus", "1206848227995333");
 
-  // console.log(`foundTask: ${JSON.stringify(foundTask, null, 2)}`);
+  console.log({ eventName, action, result });
+
+  if (result.errors) {
+    core.setFailed(JSON.stringify(result, null, 2));
+  }
 } catch (error) {
   core.setFailed(error.message);
 }
