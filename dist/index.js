@@ -58322,10 +58322,8 @@ try {
   // const TOKEN = process.env.TOKEN;
   // process.env.TOKEN = process.env.ASANA_PAT;    // this won't work because the connections have already been set up and the env var was missing
   // const payload = JSON.stringify(github.context.payload, null, 2);
-  // const payload_str = JSON.stringify(payload, null, 2);
-  // console.log(
-  //   `The '${github.context.eventName}' event payload: ${payload_str}`
-  // );
+  const payload_str = JSON.stringify(payload, null, 2);
+  console.log(`The '${eventName}' event payload: ${payload_str}`);
   // console.log({ TOKEN });
   // console.log(`token length: ${TOKEN.length}`);
   // console.log(`munged token: ${TOKEN.replace(/[46]/g, "%")}`);
@@ -58377,7 +58375,7 @@ __webpack_async_result__();
 
 let client = asana__WEBPACK_IMPORTED_MODULE_0__/* .ApiClient.instance */ .Sl.instance;
 let token = client.authentications["token"];
-token.accessToken = process.env.TOKEN;
+token.accessToken = process.env.ASANA_PAT;
 
 let tasksApiInstance = new asana__WEBPACK_IMPORTED_MODULE_0__/* .TasksApi */ .Uw();
 
@@ -74411,7 +74409,7 @@ function commentToStory(payload) {
 
 let client = dist/* ApiClient.instance */.Sl.instance;
 let token = client.authentications["token"];
-token.accessToken = process.env.TOKEN;
+token.accessToken = process.env.ASANA_PAT;
 
 let storiesApiInstance = new dist/* StoriesApi */.Or();
 
