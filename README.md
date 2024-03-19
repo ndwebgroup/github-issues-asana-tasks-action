@@ -36,12 +36,11 @@ jobs:
   issues-to-tasks:
     runs-on: ubuntu-latest
 
+    steps:
       - name: GitHub Issues To Asana Tasks
         uses: ideasonpurpose/github-issues-asana-tasks-action@v0.0.22
         env:
           ASANA_PAT: ${{ secrets.ASANA_PAT }}
-
-
 ```
 
 ## How it works
