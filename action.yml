@@ -1,7 +1,11 @@
 # docs: https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions 
 name: 'GitHub Issues To Asana Tasks'
-description: 'Link GitHub Issues to Asana Tasks'
+description: 'Mirror status and comments from GitHub Issues to Asana Tasks.'
 
 runs:
   using: 'node20'
   main: 'dist/index.js'
+
+branding:
+  icon: 'radio'
+  color: 'green'
