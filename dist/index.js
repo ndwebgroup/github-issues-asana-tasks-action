@@ -58300,9 +58300,17 @@ module.exports = parseParams
 __nccwpck_require__.a(__webpack_module__, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2186);
 /* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(5438);
-/* harmony import */ var _lib_asana_find_task_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(8972);
-/* harmony import */ var _lib_asana_update_task_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(3653);
+/* harmony import */ var _lib_asana_task_find_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(7902);
+/* harmony import */ var _lib_asana_task_completed_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(2798);
+/* harmony import */ var _lib_util_issue_to_task_js__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(3478);
+/* harmony import */ var _lib_asana_task_create_js__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(5688);
+/* harmony import */ var _lib_asana_task_add_story_js__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(44);
 // @ts-check
+
+
+
+
+
 
 
 
@@ -58316,6 +58324,12 @@ __nccwpck_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 try {
   const { eventName, payload } = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context;
   const { action } = payload;
+
+  //
+  // TODO: GET THE PROJECT_ID
+  //
+  const projectId = "1206848227995333";
+
   // TODO: TOKEN needs to be set on the environment, not so much as an input.
   // const TOKEN = core.getInput("ASANA_PAT");
   // const TOKEN = process.env.ASANA_PAT;
@@ -58328,15 +58342,29 @@ try {
   // console.log(`token length: ${TOKEN.length}`);
   // console.log(`munged token: ${TOKEN.replace(/[46]/g, "%")}`);
 
-  if (eventName === "issue") {
-    console.log(payload);
+  // NOTE: Actions must be validated to prevent running in the wrong context if the action is
+  //       specified to run on all types or un-handled types.
+  if (eventName === "issues") {
+    if (action === "opened") {
+      const taskContent = (0,_lib_util_issue_to_task_js__WEBPACK_IMPORTED_MODULE_6__/* .issueToTask */ .U)(payload);
+      const newTask = await (0,_lib_asana_task_create_js__WEBPACK_IMPORTED_MODULE_4__/* .createTask */ .v)(taskContent, projectId);
+
+      console.log(newTask);
+    } else if (action === "closed" || action === "reopened") {
+      // mark action completed = true, or incomplete = false)
+
+      const theTask = await (0,_lib_asana_task_find_js__WEBPACK_IMPORTED_MODULE_2__/* .findTaskContaining */ .l)("platypus", projectId);
+      const completed = !!(action === "closed");
+      const result = await (0,_lib_asana_task_completed_js__WEBPACK_IMPORTED_MODULE_3__/* .markTaskComplete */ .T)(completed, theTask.gid);
+      console.log({ eventName, action, result });
+    }
   } else if (eventName === "issue_comment" && action === "created") {
     //
     //
     // TODO: GEt the search string and Project_gid first
-    const theTask = await (0,_lib_asana_find_task_js__WEBPACK_IMPORTED_MODULE_2__/* .findTaskContaining */ .l)("platypus", "1206848227995333");
+    const theTask = await (0,_lib_asana_task_find_js__WEBPACK_IMPORTED_MODULE_2__/* .findTaskContaining */ .l)("platypus", projectId);
 
-    await (0,_lib_asana_update_task_js__WEBPACK_IMPORTED_MODULE_3__/* .updateTask */ .x)(_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload, theTask.gid);
+    await (0,_lib_asana_task_add_story_js__WEBPACK_IMPORTED_MODULE_5__/* .updateTask */ .x)(_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload, theTask.gid);
   }
   /**
    * Temporary wiring
@@ -58355,7 +58383,163 @@ __webpack_async_result__();
 
 /***/ }),
 
-/***/ 8972:
+/***/ 44:
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
+
+
+// EXPORTS
+__nccwpck_require__.d(__webpack_exports__, {
+  "x": () => (/* binding */ updateTask)
+});
+
+// EXTERNAL MODULE: ./node_modules/asana/dist/index.js
+var dist = __nccwpck_require__(576);
+// EXTERNAL MODULE: ./lib/util/markdown-to-asana-html.js + 65 modules
+var markdown_to_asana_html = __nccwpck_require__(8986);
+;// CONCATENATED MODULE: ./lib/util/comment-to-story.js
+// @ts-check
+
+
+
+/**
+ * Some simple conversions for translating a GitHub Issue to
+ * an Asana Task:
+ *
+ *  - Add the issue number to the title, eg. Fix blue widgets #44
+ *  - Translate raw markdown body to HTML (for html_notes)
+ *
+ * @param {object} payload An object representation of a GitHub Issue
+ * @link https://docs.github.com/en/rest/issues/issues
+ *
+ * @returns {object}
+ */
+function commentToStory(payload) {
+  const { body: body_md, html_url, user } = payload.comment;
+  const { login: user_name, html_url: user_url } = user;
+  const { number: issue_number } = payload.issue;
+
+  const story_md = `${body_md} -- [@${user_name}](${user_url}) on [#${issue_number}](${html_url})`;
+  const html_text = (0,markdown_to_asana_html/* renderMarkdown */.a)(story_md);
+
+  return { data: { html_text } };
+}
+
+;// CONCATENATED MODULE: ./lib/asana-task-add-story.js
+// asana-update-task.js
+
+/**
+ * This adds comments to an existing task.
+ */
+
+
+
+// import { renderMarkdown } from "./util/markdown-to-asana-html.js";
+
+
+let client = dist/* ApiClient.instance */.Sl.instance;
+let token = client.authentications["token"];
+token.accessToken = process.env.ASANA_PAT;
+
+let storiesApiInstance = new dist/* StoriesApi */.Or();
+
+async function updateTask(comment, task_gid) {
+  const story = commentToStory(comment);
+
+  try {
+    const result = await storiesApiInstance.createStoryForTask(story, task_gid);
+
+    console.log({ story, task_gid, result });
+    return result;
+  } catch (error) {
+    console.error(error.response.status, error.response.body);
+    return error.response.body;
+  }
+}
+
+
+/***/ }),
+
+/***/ 2798:
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
+
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "T": () => (/* binding */ markTaskComplete)
+/* harmony export */ });
+/* harmony import */ var asana__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(576);
+// @ts-check
+
+
+
+let client = asana__WEBPACK_IMPORTED_MODULE_0__/* .ApiClient.instance */ .Sl.instance;
+let token = client.authentications["token"];
+token.accessToken = process.env.ASANA_PAT;
+
+let tasksApiInstance = new asana__WEBPACK_IMPORTED_MODULE_0__/* .TasksApi */ .Uw();
+
+/**
+ * Toggle task completion
+ *
+ * @param {boolean} status True for completed, false for incomplete
+ * @param {string} task_gid
+ * @returns
+ */
+async function markTaskComplete(status, task_gid) {
+  try {
+    const result = await tasksApiInstance.updateTask(!!status, task_gid);
+
+    console.log({ status, task_gid, result });
+
+    return result;
+  } catch (error) {
+    console.error(error.response.status, error.response.body);
+    return error.response.body;
+  }
+}
+
+
+/***/ }),
+
+/***/ 5688:
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
+
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "v": () => (/* binding */ createTask)
+/* harmony export */ });
+/* harmony import */ var asana__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(576);
+// @ts-check
+
+
+
+let client = asana__WEBPACK_IMPORTED_MODULE_0__/* .ApiClient.instance */ .Sl.instance;
+let token = client.authentications["token"];
+token.accessToken = process.env.ASANA_PAT;
+
+let tasksApiInstance = new asana__WEBPACK_IMPORTED_MODULE_0__/* .TasksApi */ .Uw();
+
+/**
+ *
+ * @param {{name: string, html_notes: string}} content The contents of the task
+ * @param {string} projectId numeric string of the project to put this task in
+ */
+async function createTask(content, projectId) {
+  const task_data = { data: { ...content, projects: [projectId] } };
+  const opts = { opt_fields: "permalink_url" };
+
+  try {
+    const result = await tasksApiInstance.createTask(task_data, opts);
+
+    console.log({ result });
+    return result.data.permalink_url;
+  } catch (error) {
+    console.error(error.response.status, error.response.body);
+    return error.response.body;
+  }
+}
+
+
+/***/ }),
+
+/***/ 7902:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
 
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
@@ -58363,8 +58547,6 @@ __webpack_async_result__();
 /* harmony export */ });
 /* harmony import */ var asana__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(576);
 // @ts-check
-
-// import "dotenv/config";
 
 /**
  * This scans tasks in a project looking for a task with a description
@@ -58387,67 +58569,108 @@ let tasksApiInstance = new asana__WEBPACK_IMPORTED_MODULE_0__/* .TasksApi */ .Uw
 async function findTaskContaining(needle, projectId) {
   let taskRequests = 1;
   let tasksSearched = 0;
+  let foundTask = false;
 
   const opts = {
     // completed_since: "2012-02-22T02:06:58.158Z",
     limit: 10,
     opt_fields: "name,created_at,modified_at,notes,html_notes,permalink_url",
   };
+  try {
+    let query = await tasksApiInstance.getTasksForProject(projectId, opts);
+    let tasks = query.data;
 
-  let foundTask = false;
-  let query = await tasksApiInstance.getTasksForProject(projectId, opts);
-  let tasks = query.data;
+    while (!foundTask) {
+      for (let n = 0; n < tasks.length; n++) {
+        const search = tasks[n].html_notes.indexOf(needle);
+        tasksSearched++;
+        // console.log({ indexOf: search, gid: tasks[n].gid, tasksSearched });
+        if (search > -1) {
+          foundTask = tasks[n];
+          // console.log(foundTask);
+          break;
+        }
+      }
 
-  while (!foundTask) {
-    for (let n = 0; n < tasks.length; n++) {
-      const search = tasks[n].html_notes.indexOf(needle);
-      tasksSearched++;
-      // console.log({ indexOf: search, gid: tasks[n].gid, tasksSearched });
-      if (search > -1) {
-        foundTask = tasks[n];
-        // console.log(foundTask);
+      if (foundTask) {
         break;
       }
+
+      // console.log("getting more tasks");
+
+      query = await query.nextPage();
+      if (!query.data) {
+        // console.log("Nothing else to get");
+        console.log('here?')
+        break;
+      }
+      taskRequests++;
+      // console.log("got more:", query.data.length, "page:", taskRequests);
+      tasks = query.data;
     }
 
-    if (foundTask) {
-      break;
-    }
+    console.log(
+      "Done!, Searched",
+      tasksSearched,
+      "tasks across",
+      taskRequests,
+      "requests."
+    );
 
-    // console.log("getting more tasks");
-
-    query = await query.nextPage();
-    if (!query.data) {
-      // console.log("Nothing else to get");
-      break;
-    }
-    taskRequests++;
-    // console.log("got more:", query.data.length, "page:", taskRequests);
-    tasks = query.data;
+    //TODO: Handle errors
+    return foundTask;
+  } catch (error) {
+    console.error(error.response.status, error.response.body);
+    return error.response.body;
   }
-
-  console.log(
-    "Done!, Searched",
-    tasksSearched,
-    "tasks across",
-    taskRequests,
-    "requests."
-  );
-
-  //TODO: Handle errors
-  return foundTask;
 }
 
 
 /***/ }),
 
-/***/ 3653:
+/***/ 3478:
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
+
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "U": () => (/* binding */ issueToTask)
+/* harmony export */ });
+/* harmony import */ var _markdown_to_asana_html_js__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(8986);
+// @ts-check
+
+
+
+/**
+ * Some simple conversions for translating a GitHub Issue to
+ * an Asana Task:
+ *
+ *  - Add the issue number to the title, eg. Fix blue widgets #44
+ *  - Translate raw markdown body to HTML (for html_notes)
+ *
+ * @param {object} issue An object representation of a GitHub Issue
+ * @link https://docs.github.com/en/rest/issues/issues
+ *
+ * @returns {object}
+ */
+function issueToTask(payload) {
+  const { title, number, body, html_url } = payload.issue;
+
+  const name = `${title} #${number}`;
+  const issueLink = `\r\n\r\n${html_url}`;
+  const html_notes = (0,_markdown_to_asana_html_js__WEBPACK_IMPORTED_MODULE_0__/* .renderMarkdown */ .a)(body.trim() + issueLink);
+
+  return { name, html_notes };
+}
+
+
+/***/ }),
+
+/***/ 8986:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
 
 
 // EXPORTS
 __nccwpck_require__.d(__webpack_exports__, {
-  "x": () => (/* binding */ updateTask)
+  "a": () => (/* binding */ renderMarkdown)
 });
 
 // NAMESPACE OBJECT: ./node_modules/micromark/lib/constructs.js
@@ -58465,8 +58688,6 @@ __nccwpck_require__.d(constructs_namespaceObject, {
   "text": () => (constructs_text)
 });
 
-// EXTERNAL MODULE: ./node_modules/asana/dist/index.js
-var dist = __nccwpck_require__(576);
 ;// CONCATENATED MODULE: ./node_modules/character-entities/index.js
 /**
  * Map of named character references.
@@ -74365,63 +74586,6 @@ function renderMarkdown(rawMd) {
   // });
 
   return `<body>${cleaned}</body>`;
-}
-
-;// CONCATENATED MODULE: ./lib/util/comment-to-story.js
-// @ts-check
-
-
-
-/**
- * Some simple conversions for translating a GitHub Issue to
- * an Asana Task:
- *
- *  - Add the issue number to the title, eg. Fix blue widgets #44
- *  - Translate raw markdown body to HTML (for html_notes)
- *
- * @param {object} payload An object representation of a GitHub Issue
- * @link https://docs.github.com/en/rest/issues/issues
- *
- * @returns {object}
- */
-function commentToStory(payload) {
-  const { body: body_md, html_url, user } = payload.comment;
-  const { login: user_name, html_url: user_url } = user;
-  const { number: issue_number } = payload.issue;
-
-  const story_md = `${body_md} -- [@${user_name}](${user_url}) on [#${issue_number}](${html_url})`;
-  const html_text = renderMarkdown(story_md);
-
-  return { data: { html_text } };
-}
-
-;// CONCATENATED MODULE: ./lib/asana-update-task.js
-// asana-update-task.js
-
-/**
- * This adds comments to an existing task.
- */
-
-
-
-// import { renderMarkdown } from "./util/markdown-to-asana-html.js";
-
-
-let client = dist/* ApiClient.instance */.Sl.instance;
-let token = client.authentications["token"];
-token.accessToken = process.env.ASANA_PAT;
-
-let storiesApiInstance = new dist/* StoriesApi */.Or();
-
-async function updateTask(comment, task_gid) {
-  const story = commentToStory(comment);
-
-  //TODO: Handle errors
-  const result = await storiesApiInstance.createStoryForTask(story, task_gid);
-
-  console.log({ story, task_gid, result });
-  // return result.data.permalink_url;
-  return result;
 }
 
 
