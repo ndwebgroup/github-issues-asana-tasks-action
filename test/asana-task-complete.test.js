@@ -6,7 +6,7 @@ import * as asana from "asana";
 import { ApiClient, TasksApi } from "asana";
 
 import { issueToTask } from "../lib/util/issue-to-task.js";
-import { createTask } from "../lib/asana-create-task.js";
+import { createTask } from "../lib/asana-task-create.js";
 
 /**
  * Mocking a module with a factory
@@ -54,10 +54,12 @@ test("get mocks working", async () => {
 
 test("Call create task", async () => {
   const dummyTask = issueToTask({
-    title: "Test Task",
-    number: 3456,
-    body: "Task content",
-    html_url: "https://github.com/joemaller/actions-test-throwaway",
+    issue: {
+      title: "Test Task",
+      number: 3456,
+      body: "Task content",
+      html_url: "https://github.com/joemaller/actions-test-throwaway",
+    },
   });
 
   const projectId = "1206848227995333";

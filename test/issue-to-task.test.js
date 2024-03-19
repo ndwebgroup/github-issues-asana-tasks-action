@@ -6,18 +6,19 @@ import { beforeEach, expect, test } from "vitest";
 
 import { issueToTask } from "../lib/util/issue-to-task.js";
 
-let issue;
+let payload;
 
 beforeEach(async () => {
   // API reference: https://docs.github.com/en/rest/issues/issues
   const issueFixture = new URL("./fixtures/issue.json", import.meta.url);
   const issueJson = (await readFile(issueFixture)).toString();
-  issue = JSON.parse(issueJson);
+  const issue = JSON.parse(issueJson);
+  payload = { action: "opened", issue };
 });
 
-console.log(issue);
+
 test("Issue to Task Test", () => {
-  const actual = issueToTask(issue);
+  const actual = issueToTask(payload);
   expect(actual).toHaveProperty("name");
   expect(actual).toHaveProperty("html_notes");
   expect(actual.name).toMatch(/.*#\d+/);
