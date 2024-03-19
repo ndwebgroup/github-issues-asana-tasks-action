@@ -10,21 +10,27 @@ import { updateTask } from "./lib/asana-update-task.js";
  * @link https://docs.github.com/en/actions/creating-actions/creating-a-javascript-action
  */
 try {
+  const { eventName, payload } = github.context;
+  const { action } = payload;
   // TODO: TOKEN needs to be set on the environment, not so much as an input.
   // const TOKEN = core.getInput("ASANA_PAT");
   // const TOKEN = process.env.ASANA_PAT;
-  const TOKEN = process.env.TOKEN;
+  // const TOKEN = process.env.TOKEN;
   // process.env.TOKEN = process.env.ASANA_PAT;    // this won't work because the connections have already been set up and the env var was missing
-  const payload = JSON.stringify(github.context.payload, null, 2);
-  console.log(`The '${github.context.eventName}' event payload: ${payload}`);
-  console.log({ TOKEN });
-  console.log(`token length: ${TOKEN.length}`);
-  console.log(`munged token: ${TOKEN.replace(/[46]/g, "%")}`);
+  // const payload = JSON.stringify(github.context.payload, null, 2);
+  // const payload_str = JSON.stringify(payload, null, 2);
+  // console.log(
+  //   `The '${github.context.eventName}' event payload: ${payload_str}`
+  // );
+  // console.log({ TOKEN });
+  // console.log(`token length: ${TOKEN.length}`);
+  // console.log(`munged token: ${TOKEN.replace(/[46]/g, "%")}`);
 
-  if (
-    github.context.eventName === "issue_comment" &&
-    github.context.payload.action === "created"
-  ) {
+  if (eventName === "issue") {
+    console.log(payload);
+  } else if (eventName === "issue_comment" && action === "created") {
+    //
+    //
     // TODO: GEt the search string and Project_gid first
     const theTask = await findTaskContaining("platypus", "1206848227995333");
 
