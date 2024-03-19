@@ -5,7 +5,7 @@ import { afterEach, expect, test, vi } from "vitest";
 import * as asana from "asana";
 import { ApiClient, TasksApi } from "asana";
 
-import { issueToTask } from "../lib/util/issue-to-task-body.js";
+import { issueToTask } from "../lib/util/issue-to-task.js";
 import { createTask } from "../lib/asana-create-task.js";
 
 /**
