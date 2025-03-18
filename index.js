@@ -23,7 +23,7 @@ try {
   // TODO: GET THE PROJECT_ID
   //
   // const projectId = "1206848227995333";
-  const projectId = getProjectId(payload.issue?.body);
+  const projectId = getProjectId(payload.issue?.body) || process.env.ASANA_PROJECT_ID;
 
   // TODO: GET THE SEARCH STRING (html_url)
 

@@ -58331,7 +58331,7 @@ try {
   // TODO: GET THE PROJECT_ID
   //
   // const projectId = "1206848227995333";
-  const projectId = (0,_lib_util_project_id_from_url_js__WEBPACK_IMPORTED_MODULE_6__/* .getProjectId */ .f)(payload.issue?.body);
+  const projectId = (0,_lib_util_project_id_from_url_js__WEBPACK_IMPORTED_MODULE_6__/* .getProjectId */ .f)(payload.issue?.body) || process.env.ASANA_PROJECT_ID;
 
   // TODO: GET THE SEARCH STRING (html_url)
 
