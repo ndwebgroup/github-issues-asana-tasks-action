@@ -74620,7 +74620,7 @@ function renderMarkdown(rawMd) {
  * @returns {string | false} Returns the project Id as a numeric string.
  */
 function getProjectId(projectLink = "") {
-  const projectPattern = new RegExp("https://app.asana.com/0/(\\d+)/\\1");
+  const projectPattern = new RegExp("https://app\\.asana\\.com/0/(\\d+)/\\d+(?=$|[^/0-9])");
   projectLink = projectLink.toString();
 
   const match = projectLink.match(projectPattern);

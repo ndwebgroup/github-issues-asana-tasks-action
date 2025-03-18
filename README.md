@@ -1,6 +1,6 @@
 # GitHub Issues To Asana Tasks
 
-#### Version 0.0.24
+## Version 0.0.24
 
 This integration creates Asana Tasks from GitHub issues. Once linked, Asana issues will be updated when Issues are updated or commented upon. The linked Asana Task will be completed when the GitHub issue is closed.
 
@@ -54,8 +54,12 @@ After adding the GitHub Action to a repository, two things are required for the 
   For existing issues containing an Asana Project link, the Action will search the Project for a Task whose note contains the GitHub Issue permalink. If found, that Task will be updated with the new Issue comment.
 
 - **On Issue Closed/Re-opened**<br>
-  For existing issues containing an Asana Project link, the Action will search the Project for a Task whose note contains the GitHub Issue permalink. If found, that Task's `completed` status will be updated. 
+  For existing issues containing an Asana Project link, the Action will search the Project for a Task whose note contains the GitHub Issue permalink. If found, that Task's `completed` status will be updated.
 
 ### About Personal Access Tokens
 
 API operations authenticated with Personal Access Tokens will assume the identity of the user who created the token. We recommend creating a bot account in your Asana workspace. Log in as the bot user and follow [Asana's documentation for creating a Personal Access Token](https://developers.asana.com/docs/personal-access-token).
+
+## Building the project
+
+`npm run build`
